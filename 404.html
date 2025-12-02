@@ -21,13 +21,38 @@
     body { font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif; margin: 2rem; color: #111; }
     a { color: #0b5bd3; }
   </style>
-  <script>
-    (function() {
-      try {
-        var target = '/uk-air-pollution-emissions-data-explorer/';
         var path = (location.pathname || '/');
+        var search = location.search || '';
+        var hash = location.hash || '';
 
-        // Honor legacy /naei-multigroup-viewer URLs by bouncing them straight to the new explorer
+        function resolveAlias(pathname) {
+          var map = [
+            { from: '/data-explorer', to: '/uk-air-pollution-emissions-data-explorer' },
+            { from: '/naei-multigroup-viewer', to: '/uk-air-pollution-emissions-data-explorer' }
+          ];
+          var lower = pathname.toLowerCase();
+          for (var i = 0; i < map.length; i++) {
+            var from = map[i].from;
+            var fromLower = from.toLowerCase();
+            if (lower === fromLower || lower.indexOf(fromLower + '/') === 0) {
+              var remainder = pathname.slice(from.length);
+              if (!remainder) {
+                return map[i].to + '/';
+              }
+              if (remainder.charAt(0) !== '/') {
+                remainder = '/' + remainder;
+              }
+              return map[i].to + remainder;
+            }
+          }
+          return null;
+        }
+
+        var aliasTarget = resolveAlias(path);
+        if (aliasTarget) {
+          location.replace(aliasTarget + search + hash);
+          return;
+        }
         if (/\/naei-multigroup-viewer/i.test(path)) {
           location.replace(target);
           return;
