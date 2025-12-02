@@ -15,6 +15,12 @@
         var target = '/uk-air-pollution-emissions-data-explorer/';
         var path = (location.pathname || '/');
 
+        // Honor legacy /naei-multigroup-viewer URLs by bouncing them straight to the new explorer
+        if (/\/naei-multigroup-viewer/i.test(path)) {
+          location.replace(target);
+          return;
+        }
+
         // Normalize: lowercase, trim leading/trailing slashes, remove hyphens/underscores/spaces.
         function norm(s){
           return s.toLowerCase().replace(/^\/+|\/+$/g,'').replace(/[\-_\s]/g,'');
@@ -44,7 +50,9 @@
           'ukemissionsdatabubblechart', 'ukemissionsdatalinechart',
           'ukairpollutionemissionsdatabubblechart', 'ukairpollutionemissionsdatalinechart',
           // Tolerate accidental ".html" typed in URL bars
-          'dataexplorerhtml', 'ukairpollutionemissionsdataexplorerhtml'
+          'dataexplorerhtml', 'ukairpollutionemissionsdataexplorerhtml',
+          // Legacy viewer slug
+          'naeimultigroupviewer'
         ]);
 
         if (redirectSet.has(p)) {
