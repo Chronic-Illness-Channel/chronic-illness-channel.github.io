@@ -26,38 +26,6 @@
       try {
         var target = '/uk-air-pollution-emissions-data-explorer/';
         var path = (location.pathname || '/');
-        var search = location.search || '';
-        var hash = location.hash || '';
-
-        // Rewrite common aliases (and any nested paths) onto the canonical explorer.
-        function resolveAlias(pathname) {
-          var map = [
-            { from: '/data-explorer', to: target.replace(/\/+$/, '') },
-            { from: '/naei-multigroup-viewer', to: target.replace(/\/+$/, '') }
-          ];
-          var lower = pathname.toLowerCase();
-          for (var i = 0; i < map.length; i++) {
-            var from = map[i].from;
-            var fromLower = from.toLowerCase();
-            if (lower === fromLower || lower.indexOf(fromLower + '/') === 0) {
-              var remainder = pathname.slice(from.length);
-              if (!remainder) {
-                return map[i].to + '/';
-              }
-              if (remainder.charAt(0) !== '/') {
-                remainder = '/' + remainder;
-              }
-              return map[i].to + remainder;
-            }
-          }
-          return null;
-        }
-
-        var aliasTarget = resolveAlias(path);
-        if (aliasTarget) {
-          location.replace(aliasTarget + search + hash);
-          return;
-        }
 
         // Honor legacy /naei-multigroup-viewer URLs by bouncing them straight to the new explorer
         if (/\/naei-multigroup-viewer/i.test(path)) {
